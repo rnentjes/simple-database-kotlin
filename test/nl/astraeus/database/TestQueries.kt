@@ -1,14 +1,10 @@
 package nl.astraeus.database
 
 import nl.astraeus.database.annotations.Id
-import nl.astraeus.database.jdbc.ConnectionPool
-import nl.astraeus.database.jdbc.ConnectionProvider
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.SQLException
 import kotlin.test.assertTrue
 
 /**
@@ -29,22 +25,14 @@ class TestQueries {
     @Before fun setUp() {
         DdlMapping.get().setExecuteDDLUpdates(true)
 
-        ConnectionPool.get().setConnectionProvider(object : ConnectionProvider {
-            override fun getConnection(): Connection {
-                try {
-                    Class.forName("org.h2.Driver")
+        setConnectionProvider {
+            Class.forName("org.h2.Driver")
 
-                    val connection = DriverManager.getConnection("jdbc:h2:mem:TestQueries", "sa", "")
-                    connection.autoCommit = false
+            val connection = DriverManager.getConnection("jdbc:h2:mem:TestQueries", "sa", "")
+            connection.autoCommit = false
 
-                    return connection
-                } catch (e: ClassNotFoundException) {
-                    throw IllegalStateException(e)
-                } catch (e: SQLException) {
-                    throw IllegalStateException(e)
-                }
-            }
-        })
+            connection
+        }
     }
 
     @After fun tearDown() {
@@ -55,17 +43,34 @@ class TestQueries {
         var dao = UserDao()
 
         transaction {
-            dao.insert(User("Rien", "info@nentjes.com"))
-            dao.insert(User("Piet", "piet@nentjes.com"))
+            var rien = User("Rien", "info@somewhere.com")
+            var piet = User("Piet", "piet@somewhere.com")
 
-            var found = dao.where("name = ?", "Rien")
+            dao.insert(rien)
+            dao.upsert(piet)
+
+            rien.name = "Rrrrien"
+            dao.update(rien)
+
+            piet.email = "pietje@somewhere.com"
+            dao.upsert(piet)
+
+            var found = dao.where("name = ?", "Rrrrien")
 
             assertTrue {
                 found.size() == 1
             }
 
-            for(user in found) {
-                println("Found: ${user.name}")
+            assertTrue {
+                dao.all().size() == 2
+            }
+
+            assertTrue {
+                dao.count("name = ?", "Piet") == 1
+            }
+
+            for(user in dao.all()) {
+                println("Found: #${user.id} - ${user.name} - ${user.email}")
             }
         }
     }

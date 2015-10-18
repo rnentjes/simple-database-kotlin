@@ -1,5 +1,9 @@
 package nl.astraeus.database
 
+import nl.astraeus.database.jdbc.ConnectionPool
+import nl.astraeus.database.jdbc.ConnectionProvider
+import java.sql.Connection
+
 /**
  * User: rnentjes
  * Date: 18-10-15
@@ -46,4 +50,10 @@ fun transaction(task: () -> Unit) {
             rollback()
         }
     }
+}
+
+fun setConnectionProvider(conn: () -> Connection ) {
+    ConnectionPool.get().setConnectionProvider(object : ConnectionProvider {
+        override fun getConnection(): Connection = conn()
+    })
 }
