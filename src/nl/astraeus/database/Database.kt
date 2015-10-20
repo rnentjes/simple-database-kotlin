@@ -39,15 +39,39 @@ fun connection() = Persister.getConnection()
 fun transactionActive() = Persister.transactionActive()
 
 fun transaction(task: () -> Unit) {
-    try {
-        begin()
+    if (transactionActive()) {
+        return task()
+    } else {
+        try {
+            begin()
 
-        task()
+            task()
 
-        commit()
-    } finally {
-        if (transactionActive()) {
-            rollback()
+            commit()
+        } finally {
+            if (transactionActive()) {
+                rollback()
+            }
+        }
+    }
+}
+
+fun transaction<T>(task: () -> T): T {
+    if (transactionActive()) {
+        return task()
+    } else {
+        try {
+            begin()
+
+            var result = task()
+
+            commit()
+
+            return result
+        } finally {
+            if (transactionActive()) {
+                rollback()
+            }
         }
     }
 }
