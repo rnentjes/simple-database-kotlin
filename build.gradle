@@ -11,8 +11,6 @@ sourceSets {
     test.java.srcDirs += 'test'
 }
 
-sourceCompatibility = 1.5
-
 repositories {
     maven {
         url "http://nexus.astraeus.nl/nexus/content/groups/public"

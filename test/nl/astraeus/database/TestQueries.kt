@@ -33,7 +33,10 @@ class Company(var name: String) {
 }
 
 @Table(name = "usr")
-class User(var company: Company, var name: String, var email: String) {
+class User(
+        var company: Company,
+        var name: String,
+        var email: String) {
     @Id var id: Long = 0
 
     protected constructor(): this(Company(""), "", "")
