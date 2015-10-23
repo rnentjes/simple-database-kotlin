@@ -109,22 +109,22 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jetbrains.kotlin:kotlin-runtime:0.14.451">
+    <library name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.0-beta-1038">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-runtime/0.14.451/7efef3590edde7043f58365f3ccf38f140b9d204/kotlin-runtime-0.14.451.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-runtime/1.0.0-beta-1038/d58a601675d08c8a5874c2cc646cfa06be648c37/kotlin-runtime-1.0.0-beta-1038.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-runtime/0.14.451/231fb30c06af06df90f98e0c972587033f6a0fa1/kotlin-runtime-0.14.451-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-runtime/1.0.0-beta-1038/915ea01cdfbd7af7ecae31f39d20891b33f40bf5/kotlin-runtime-1.0.0-beta-1038-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:0.14.451">
+    <library name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-1038">
       <CLASSES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/0.14.451/2649abc142cf385692d57353bb41dd31dfe832cf/kotlin-stdlib-0.14.451.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.0.0-beta-1038/99d226f809024f8a092a08fefaabe3a1cda8612a/kotlin-stdlib-1.0.0-beta-1038.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/0.14.451/1199164fe537f7734df0ec90f65cc5dfd7c1b9ed/kotlin-stdlib-0.14.451-sources.jar!/" />
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.0.0-beta-1038/40a2c92dd84e0dad422c33617d875f9a28865a13/kotlin-stdlib-1.0.0-beta-1038-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Gradle: org.slf4j:slf4j-api:1.7.12">

@@ -22,8 +22,6 @@ class Company(var name: String) {
     protected constructor(): this("")
 
     fun users(): List<User> {
-        var result: List<User>
-
         return transaction<List<User>> {
             var dao = UserDao()
 
@@ -143,11 +141,11 @@ class TestQueries {
             var found = userDao.where("name = ?", "Rrrrien")
 
             assertTrue {
-                found.size() == 1
+                found.size == 1
             }
 
             assertTrue {
-                userDao.all().size() == 2
+                userDao.all().size == 2
             }
 
             assertTrue {

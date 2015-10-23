@@ -56,7 +56,7 @@ fun transaction(task: () -> Unit) {
     }
 }
 
-fun transaction<T>(task: () -> T): T {
+fun <T> transaction(task: () -> T): T {
     if (transactionActive()) {
         return task()
     } else {

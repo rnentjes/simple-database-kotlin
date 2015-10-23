@@ -18,7 +18,7 @@ repositories {
 }
 
 buildscript {
-    ext.kotlin_version = '0.14.451'
+    ext.kotlin_version = '1.+'
     repositories {
         maven {
             url "http://nexus.astraeus.nl/nexus/content/groups/public"
