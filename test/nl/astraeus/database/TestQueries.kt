@@ -3,11 +3,11 @@ package nl.astraeus.database
 import nl.astraeus.database.annotations.Column
 import nl.astraeus.database.annotations.Id
 import nl.astraeus.database.annotations.Table
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
 import java.sql.DriverManager
-import kotlin.test.assertTrue
 
 /**
  * User: rnentjes
@@ -140,17 +140,11 @@ class TestQueries {
         transaction {
             var found = userDao.where("name = ?", "Rrrrien")
 
-            assertTrue {
-                found.size == 1
-            }
+            assertTrue(found.size == 1)
 
-            assertTrue {
-                userDao.all().size == 2
-            }
+            assertTrue(userDao.all().size == 2)
 
-            assertTrue {
-                userDao.count("name = ?", "Piet") == 1
-            }
+            assertTrue(userDao.count("name = ?", "Piet") == 1)
 
             for(company in companyDao.all()) {
                 println("Company: #${company.id} - ${company.name}")
