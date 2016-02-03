@@ -1,5 +1,5 @@
 group 'nl.astraeus.database'
-version '1.2.5-SNAPSHOT'
+version '1.2.6-SNAPSHOT'
 
 apply plugin: 'kotlin'
 apply plugin: 'idea'
@@ -18,13 +18,10 @@ repositories {
 }
 
 buildscript {
-    ext.kotlin_version = '1.+'
+    ext.kotlin_version = '1.0.0-rc-1025'
     repositories {
         maven {
             url "http://nexus.astraeus.nl/nexus/content/groups/public"
-        }
-        maven {
-            url "https://dl.bintray.com/kotlin/kotlin-eap/"
         }
     }
     dependencies {
