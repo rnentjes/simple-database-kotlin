@@ -16,7 +16,7 @@ import java.sql.DriverManager
  */
 
 @Table
-class Company(var name: String) {
+data class Company(var name: String) {
     @Id var id: Long = 0
 
     protected constructor(): this("")
@@ -126,14 +126,16 @@ class TestQueries {
         transaction {
             var user = userDao.find("name = ?", "Rrrrien")
 
-            user.company.name = "Better Company!"
+            if (user != null) {
+                user.company.name = "Better Company!"
 
-            companyDao.update(user.company)
+                companyDao.update(user.company)
 
-            var companies = mtmDao.companies(user)
+                var companies = mtmDao.companies(user)
 
-            for (company in companies) {
-                println("Company from ${user.name} -> ${company.name}")
+                for (company in companies) {
+                    println("Company from ${user.name} -> ${company.name}")
+                }
             }
         }
 
