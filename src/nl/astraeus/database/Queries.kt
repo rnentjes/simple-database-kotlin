@@ -8,7 +8,7 @@ import java.sql.ResultSet
  * Time: 16:46
  */
 
-fun execute(query: String, vararg args: String) = Persister.execute(query, *args);
+fun execute(query: String, vararg args: String) = Persister.execute(query, *args)
 
 fun query(query: String, vararg args: String): ResultSet = Persister.executeQuery(query, *args)
 

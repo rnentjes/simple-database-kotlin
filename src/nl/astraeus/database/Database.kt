@@ -63,7 +63,7 @@ fun <T> transaction(task: () -> T): T {
         try {
             begin()
 
-            var result = task()
+            val result = task()
 
             commit()
 
