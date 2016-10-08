@@ -8,11 +8,11 @@ import java.sql.ResultSet
  * Time: 16:46
  */
 
-fun execute(query: String, vararg args: String) = Persister.execute(query, *args)
+fun execute(query: String, vararg args: Any) = Persister.execute(query, *args);
 
-fun query(query: String, vararg args: String): ResultSet = Persister.executeQuery(query, *args)
+fun query(query: String, vararg args: Any): ResultSet = Persister.executeQuery(query, *args)
 
-fun update(query: String, vararg args: String): Int = Persister.executeUpdate(query, *args)
+fun update(query: String, vararg args: Any): Int = Persister.executeUpdate(query, *args)
 
 abstract class Dao<T>(val cls: Class<T>) {
 
@@ -20,8 +20,8 @@ abstract class Dao<T>(val cls: Class<T>) {
         Persister.init(cls)
     }
 
-    open fun find(id: Long): T = Persister.find(cls, id)
-    open fun find(query: String, vararg args: Any): T = Persister.findWhere(cls, query, *args)
+    open fun find(id: Long): T? = Persister.find(cls, id)
+    open fun find(query: String, vararg args: Any): T? = Persister.findWhere(cls, query, *args)
 
     open fun insert(obj: T) = Persister.insert(obj)
     open fun update(obj: T) = Persister.update(obj)
