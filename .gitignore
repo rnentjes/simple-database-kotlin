@@ -5,3 +5,4 @@ gradle.properties
 .gradle
 build
 simple-database-kotlin.iws
+.idea/workspace.xml
