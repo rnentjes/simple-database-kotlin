@@ -1,3 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 local.properties
 gradle.properties
+
+.gradle
+build
+simple-database-kotlin.iws

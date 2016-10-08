@@ -6,6 +6,7 @@ apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'maven-publish'
+apply plugin: 'net.researchgate.release'
 
 sourceSets {
     main.java.srcDirs += 'src'
@@ -24,9 +25,13 @@ buildscript {
         maven {
             url "http://nexus.astraeus.nl/nexus/content/groups/public"
         }
+        maven {
+            url 'https://plugins.gradle.org/m2/'
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'net.researchgate:gradle-release:2.4.0'
     }
 }
 
