@@ -129,9 +129,9 @@ class TestQueries {
             if (user != null) {
                 user.company.name = "Better Company!"
 
-            CompanyDao.update(user.company)
+                CompanyDao.update(user.company)
 
-            val companies = MTMDao.companies(user)
+                val companies = MTMDao.companies(user)
 
                 for (company in companies) {
                     println("Company from ${user.name} -> ${company.name}")
