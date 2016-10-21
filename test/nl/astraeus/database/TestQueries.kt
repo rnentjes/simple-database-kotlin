@@ -23,9 +23,7 @@ class Company(var name: String) {
 
     fun users(): List<User> {
         return transaction<List<User>> {
-            var dao = UserDao()
-
-            dao.where("company = ?", id)
+            UserDao.where("company = ?", id)
         }
     }
 }
@@ -48,25 +46,21 @@ class ManyToMany(var company: Company, @Column(name = "usr") var user: User) {
     protected constructor(): this(Company(""), User(Company(""), "", ""))
 }
 
-class CompanyDao(): Dao<Company>(Company::class.java)
+object CompanyDao: Dao<Company>(Company::class.java)
 
-class UserDao(): Dao<User>(User::class.java)
+object UserDao: Dao<User>(User::class.java)
 
-class MTMDao(): Dao<ManyToMany>(ManyToMany::class.java) {
+object MTMDao: Dao<ManyToMany>(ManyToMany::class.java) {
 
     fun users(comp: Company): List<User> {
         return transaction<List<User>> {
-            var dao = UserDao()
-
-            dao.from("join manytomany where manytomany.user = usr.id and manytomany.company = ?", comp.id)
+            UserDao.from("join manytomany where manytomany.user = usr.id and manytomany.company = ?", comp.id)
         }
     }
 
     fun companies(user: User): List<Company> {
         return transaction<List<Company>> {
-            var dao = CompanyDao()
-
-            dao.from("join manytomany where manytomany.company = company.id and manytomany.user = ?", user.id)
+            CompanyDao.from("join manytomany where manytomany.company = company.id and manytomany.user = ?", user.id)
         }
     }
 }
@@ -99,28 +93,25 @@ class TestQueries {
     }
 
     @Test fun testWhere() {
-        var companyDao = CompanyDao()
-        var userDao = UserDao()
-        var mtmDao = MTMDao()
 
         transaction {
-            var company = Company("company")
+            val company = Company("company")
 
-            var rien = User(company, "Rien", "info@somewhere.com")
-            var piet = User(company, "Piet", "piet@somewhere.com")
+            val rien = User(company, "Rien", "info@somewhere.com")
+            val piet = User(company, "Piet", "piet@somewhere.com")
 
-            userDao.insert(rien)
-            userDao.upsert(piet)
+            UserDao.insert(rien)
+            UserDao.upsert(piet)
 
             rien.name = "Rrrrien"
-            userDao.update(rien)
+            UserDao.update(rien)
 
             piet.email = "pietje@somewhere.com"
-            userDao.upsert(piet)
+            UserDao.upsert(piet)
 
-            mtmDao.insert(ManyToMany(company, rien))
-            mtmDao.insert(ManyToMany(company, piet))
-            mtmDao.insert(ManyToMany(Company("Other company"), rien))
+            MTMDao.insert(ManyToMany(company, rien))
+            MTMDao.insert(ManyToMany(company, piet))
+            MTMDao.insert(ManyToMany(Company("Other company"), rien))
         }
 
         transaction {
@@ -140,15 +131,15 @@ class TestQueries {
         }
 
         transaction {
-            var found = userDao.where("name = ?", "Rrrrien")
+            var found = UserDao.where("name = ?", "Rrrrien")
 
             assertTrue(found.size == 1)
 
-            assertTrue(userDao.all().size == 2)
+            assertTrue(UserDao.all().size == 2)
 
-            assertTrue(userDao.count("name = ?", "Piet") == 1)
+            assertTrue(UserDao.count("name = ?", "Piet") == 1)
 
-            for(company in companyDao.all()) {
+            for(company in CompanyDao.all()) {
                 println("Company: #${company.id} - ${company.name}")
 
                 for(user in company.users()) {
@@ -156,7 +147,7 @@ class TestQueries {
                 }
             }
 
-            for(user in userDao.all()) {
+            for(user in UserDao.all()) {
                 println("Found: #${user.id} - ${user.name} - ${user.email} - ${user.company.name}")
             }
 
