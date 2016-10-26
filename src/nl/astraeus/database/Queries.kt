@@ -12,12 +12,13 @@ fun execute(query: String, vararg args: Any) = Persister.execute(query, *args);
 
 fun query(query: String, vararg args: Any): ResultSet = Persister.executeQuery(query, *args)
 
-fun update(query: String, vararg args: Any): Int = Persister.executeUpdate(query, *args)
+fun executeUpdate(query: String, vararg args: Any): Int = Persister.executeUpdate(query, *args)
 
 abstract class Dao<T>(val cls: Class<T>) {
 
     init {
         Persister.init(cls)
+
     }
 
     open fun find(id: Long): T? = Persister.find(cls, id)
@@ -35,5 +36,7 @@ abstract class Dao<T>(val cls: Class<T>) {
     open fun count(query: String, vararg args: Any): Int = Persister.selectCount(cls, query, *args)
 
     open fun all(): List<T> = Persister.selectAll(cls)
+
+    open fun clearCache() = Persister.invalidateCache(cls)
 
 }
