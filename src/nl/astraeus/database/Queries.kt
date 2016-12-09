@@ -18,7 +18,6 @@ abstract class Dao<T>(val cls: Class<T>) {
 
     init {
         Persister.init(cls)
-
     }
 
     open fun find(id: Long): T? = Persister.find(cls, id)

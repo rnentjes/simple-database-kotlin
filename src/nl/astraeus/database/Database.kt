@@ -23,7 +23,7 @@ fun commit() {
         throw IllegalStateException("No connection active in commit!")
     }
 
-    Persister.commit();
+    Persister.commit()
 }
 
 fun rollback() {
@@ -31,7 +31,7 @@ fun rollback() {
         throw IllegalStateException("No connection active in rollback!")
     }
 
-    Persister.rollback();
+    Persister.rollback()
 }
 
 fun connection() = Persister.getConnection()
@@ -40,7 +40,7 @@ fun transactionActive() = Persister.transactionActive()
 
 fun transaction(task: () -> Unit) {
     if (transactionActive()) {
-        return task()
+        task()
     } else {
         try {
             begin()
@@ -77,7 +77,5 @@ fun <T> transaction(task: () -> T): T {
 }
 
 fun setConnectionProvider(conn: () -> Connection ) {
-    ConnectionPool.get().setConnectionProvider(object : ConnectionProvider {
-        override fun getConnection(): Connection = conn()
-    })
+    ConnectionPool.get().setConnectionProvider { conn() }
 }
