@@ -1,83 +1,49 @@
 package nl.astraeus.database
 
-import nl.astraeus.database.jdbc.ConnectionPool
-import nl.astraeus.database.jdbc.ConnectionProvider
-import java.sql.Connection
-
 /**
  * User: rnentjes
  * Date: 18-10-15
  * Time: 16:40
  */
 
-fun begin() {
-    if (Persister.transactionActive()) {
-        throw IllegalStateException("Already connection active in begin!")
-    }
+fun transaction(name: String = "default", task: () -> Unit) {
+    val db = SimpleDatabase.get(name)
 
-    Persister.begin()
-}
-
-fun commit() {
-    if (!Persister.transactionActive()) {
-        throw IllegalStateException("No connection active in commit!")
-    }
-
-    Persister.commit();
-}
-
-fun rollback() {
-    if (!Persister.transactionActive()) {
-        throw IllegalStateException("No connection active in rollback!")
-    }
-
-    Persister.rollback();
-}
-
-fun connection() = Persister.getConnection()
-
-fun transactionActive() = Persister.transactionActive()
-
-fun transaction(task: () -> Unit) {
-    if (transactionActive()) {
+    if (db.transactionActive()) {
         return task()
     } else {
         try {
-            begin()
+            db.begin()
 
             task()
 
-            commit()
+            db.commit()
         } finally {
-            if (transactionActive()) {
-                rollback()
+            if (db.transactionActive()) {
+                db.rollback()
             }
         }
     }
 }
 
-fun <T> transaction(task: () -> T): T {
-    if (transactionActive()) {
+fun <T> transaction(name: String = "default", task: () -> T): T {
+    val db = SimpleDatabase.get(name)
+
+    if (db.transactionActive()) {
         return task()
     } else {
         try {
-            begin()
+            db.begin()
 
-            var result = task()
+            val result = task()
 
-            commit()
+            db.commit()
 
             return result
         } finally {
-            if (transactionActive()) {
-                rollback()
+            if (db.transactionActive()) {
+                db.rollback()
             }
         }
     }
-}
-
-fun setConnectionProvider(conn: () -> Connection ) {
-    ConnectionPool.get().setConnectionProvider(object : ConnectionProvider {
-        override fun getConnection(): Connection = conn()
-    })
 }

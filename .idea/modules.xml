@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-database-kotlin.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-database-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-database-kotlin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-database-kotlin_main.iml" group="simple-database-kotlin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/simple-database-kotlin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/simple-database-kotlin_test.iml" group="simple-database-kotlin" />
     </modules>
   </component>
 </project>

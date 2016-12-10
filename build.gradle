@@ -1,4 +1,4 @@
-group 'nl.astraeus.database'
+group 'nl.astraeus'
 version '1.2.8-SNAPSHOT'
 
 apply plugin: 'kotlin'
@@ -13,6 +13,7 @@ sourceSets {
 }
 
 repositories {
+    mavenLocal()
     maven {
         url "http://nexus.astraeus.nl/nexus/content/groups/public"
     }
@@ -33,7 +34,7 @@ buildscript {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "nl.astraeus.database:simple-database:1.2.4-SNAPSHOT"
+    compile "nl.astraeus:simple-database:2.0.0-SNAPSHOT"
 }
 
 uploadArchives {
