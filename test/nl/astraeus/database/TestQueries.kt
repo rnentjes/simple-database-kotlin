@@ -107,21 +107,21 @@ class TestQueries {
         transaction {
             val company = Company("company")
 
-            val rien = User(company, "Info", "info@somewhere.com")
+            val info = User(company, "Info", "info@somewhere.com")
             val piet = User(company, "Piet", "piet@somewhere.com")
 
-            userDao.insert(rien)
+            userDao.insert(info)
             userDao.upsert(piet)
 
-            rien.name = "Iiiinfo"
-            userDao.update(rien)
+            info.name = "Iiiinfo"
+            userDao.update(info)
 
             piet.email = "pietje@somewhere.com"
             userDao.upsert(piet)
 
-            mtmDao.insert(ManyToMany(company, rien))
+            mtmDao.insert(ManyToMany(company, info))
             mtmDao.insert(ManyToMany(company, piet))
-            mtmDao.insert(ManyToMany(Company("Other company"), rien))
+            mtmDao.insert(ManyToMany(Company("Other company"), info))
         }
 
         transaction {
