@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: nl.astraeus:simple-database:2.0.1">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-database/2.0.1/353b13f105f125dfb5c0fc0dfeb041720b14553c/simple-database-2.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-database/2.0.1/4523a88ffcabf20e00baecbd360cf1ab62db3f77/simple-database-2.0.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
