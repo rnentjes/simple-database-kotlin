@@ -17,6 +17,7 @@
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.6-eap-77" level="project" />
     <orderEntry type="library" name="Gradle: nl.astraeus:simple-database:2.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.11" level="project" />
+    <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.193" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.6-eap-77" level="project" />
     <orderEntry type="library" name="Gradle: nl.astraeus.template:very-simple-templates:1.3" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.21" level="project" />

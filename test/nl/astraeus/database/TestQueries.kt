@@ -3,6 +3,8 @@ package nl.astraeus.database
 import nl.astraeus.database.annotations.Column
 import nl.astraeus.database.annotations.Id
 import nl.astraeus.database.annotations.Table
+import nl.astraeus.database.jdbc.ConnectionPool
+import nl.astraeus.database.jdbc.ConnectionProvider
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -48,15 +50,15 @@ class ManyToMany(var company: Company, @Column(name = "usr") var user: User) {
     protected constructor(): this(Company(""), User(Company(""), "", ""))
 }
 
-class CompanyDao(): Dao<Company>(Company::class.java)
+class CompanyDao(): SimpleDao<Company>(Company::class.java)
 
-class UserDao(): Dao<User>(User::class.java)
+class UserDao(): SimpleDao<User>(User::class.java)
 
-class MTMDao(): Dao<ManyToMany>(ManyToMany::class.java) {
+class MTMDao(): SimpleDao<ManyToMany>(ManyToMany::class.java) {
 
     fun users(comp: Company): List<User> {
         return transaction<List<User>> {
-            var dao = UserDao()
+            val dao = UserDao()
 
             dao.from("join manytomany where manytomany.user = usr.id and manytomany.company = ?", comp.id)
         }
@@ -64,7 +66,7 @@ class MTMDao(): Dao<ManyToMany>(ManyToMany::class.java) {
 
     fun companies(user: User): List<Company> {
         return transaction<List<Company>> {
-            var dao = CompanyDao()
+            val dao = CompanyDao()
 
             dao.from("join manytomany where manytomany.company = company.id and manytomany.user = ?", user.id)
         }
@@ -81,38 +83,37 @@ fun createConnection(): Connection {
     return connection
 }
 
+class MyConnectionProvider : ConnectionProvider() {
+
+    override fun getConnection() = createConnection()
+
+    override fun getDefinition(): DdlMapping.DatabaseDefinition {
+        return DdlMapping.DatabaseDefinition.H2
+    }
+}
+
 class TestQueries {
     @Before fun setUp() {
-        DdlMapping.get().setExecuteDDLUpdates(true)
+        val db = SimpleDatabase.define(ConnectionPool(MyConnectionProvider()))
 
-        setConnectionProvider(::createConnection)
-
-        setConnectionProvider {
-            Class.forName("org.h2.Driver")
-
-            val connection = DriverManager.getConnection("jdbc:h2:mem:TestQueries", "sa", "")
-            connection.autoCommit = false
-
-            // result
-            connection
-        }
+        db.setExecuteDDLUpdates(true);
     }
 
     @Test fun testWhere() {
-        var companyDao = CompanyDao()
-        var userDao = UserDao()
-        var mtmDao = MTMDao()
+        val companyDao = CompanyDao()
+        val userDao = UserDao()
+        val mtmDao = MTMDao()
 
         transaction {
-            var company = Company("company")
+            val company = Company("company")
 
-            var rien = User(company, "Rien", "info@somewhere.com")
-            var piet = User(company, "Piet", "piet@somewhere.com")
+            val rien = User(company, "Info", "info@somewhere.com")
+            val piet = User(company, "Piet", "piet@somewhere.com")
 
             userDao.insert(rien)
             userDao.upsert(piet)
 
-            rien.name = "Rrrrien"
+            rien.name = "Iiiinfo"
             userDao.update(rien)
 
             piet.email = "pietje@somewhere.com"
@@ -124,14 +125,14 @@ class TestQueries {
         }
 
         transaction {
-            var user = userDao.find("name = ?", "Rrrrien")
+            val user = userDao.find("name = ?", "Iiiinfo")
 
             if (user != null) {
                 user.company.name = "Better Company!"
 
                 companyDao.update(user.company)
 
-                var companies = mtmDao.companies(user)
+                val companies = mtmDao.companies(user)
 
                 for (company in companies) {
                     println("Company from ${user.name} -> ${company.name}")
@@ -140,7 +141,7 @@ class TestQueries {
         }
 
         transaction {
-            var found = userDao.where("name = ?", "Rrrrien")
+            val found = userDao.where("name = ?", "Iiiinfo")
 
             assertTrue(found.size == 1)
 
@@ -160,7 +161,7 @@ class TestQueries {
                 println("Found: #${user.id} - ${user.name} - ${user.email} - ${user.company.name}")
             }
 
-            var rs = query("SELECT * FROM company")
+            var rs = query(query = "SELECT * FROM company")
 
             while(rs.next()) {
                 print("Company: ")
@@ -169,7 +170,7 @@ class TestQueries {
                 println(rs.getString(2))
             }
 
-            rs = query("SELECT * FROM usr")
+            rs = query(query = "SELECT * FROM usr")
 
             while(rs.next()) {
                 print("User: ")
@@ -182,7 +183,7 @@ class TestQueries {
                 println(rs.getString(4))
             }
 
-            rs = query("SELECT * FROM manytomany")
+            rs = query(query = "SELECT * FROM manytomany")
 
             while(rs.next()) {
                 print("MTM: ")
