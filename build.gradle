@@ -1,5 +1,5 @@
 group 'nl.astraeus'
-version '2.0.1-SNAPSHOT'
+version '2.0.3-SNAPSHOT'
 
 apply plugin: 'kotlin'
 apply plugin: 'idea'
@@ -82,3 +82,14 @@ publishing {
         }
     }
 }
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'simple-database-kotlin',
+                'Implementation-Version': version
+    }
+    baseName = project.name + '-nodep'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
