@@ -1,5 +1,19 @@
 # Simple database kotlin
 
+## Maven, gradle etc:
+
+Add maven repository: https://nexus.astraeus.nl/nexus/content/groups/public
+
+Pom:
+
+```xml
+<dependency>
+  <groupId>nl.astraeus</groupId>
+  <artifactId>simple-database-kotlin</artifactId>
+  <version>2.0.2</version>
+</dependency>
+```
+
 ## Minimal example:
 
 ```kotlin
