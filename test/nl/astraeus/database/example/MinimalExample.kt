@@ -77,7 +77,7 @@ fun main(args: Array<String>) {
     db.begin()
 
     transaction {
-        val person = personDao.find("name = ?", "John")
+        val person = personDao.find("name = ? and age = ?", "John", 40)
 
         person.name = "Johnny"
 
