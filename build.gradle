@@ -1,5 +1,5 @@
 group 'nl.astraeus'
-version '1.2.8-SNAPSHOT'
+version '2.0.1-SNAPSHOT'
 
 apply plugin: 'kotlin'
 apply plugin: 'idea'
@@ -36,7 +36,7 @@ dependencies {
     testCompile "com.h2database:h2:1.4.+"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "nl.astraeus:simple-database:2.0.0-SNAPSHOT"
+    compile "nl.astraeus:simple-database:2.0.0"
 }
 
 uploadArchives {
@@ -58,6 +58,21 @@ findbugs {
 
 javadoc {
     failOnError = false
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
 
 publishing {
