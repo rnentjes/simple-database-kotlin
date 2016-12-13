@@ -1,5 +1,5 @@
 group 'nl.astraeus'
-version '2.0.3-SNAPSHOT'
+version '2.0.4-SNAPSHOT'
 
 apply plugin: 'kotlin'
 apply plugin: 'idea'
@@ -36,7 +36,7 @@ dependencies {
     testCompile "com.h2database:h2:1.4.+"
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile "nl.astraeus:simple-database:2.0.1"
+    compile "nl.astraeus:simple-database:2.0.3"
 }
 
 uploadArchives {
