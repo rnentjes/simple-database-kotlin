@@ -5,7 +5,7 @@ import nl.astraeus.database.annotations.Id
 import nl.astraeus.database.annotations.Table
 import nl.astraeus.database.jdbc.ConnectionPool
 import nl.astraeus.database.jdbc.ConnectionProvider
-import org.junit.Assert.*
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
