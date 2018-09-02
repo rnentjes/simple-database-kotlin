@@ -77,9 +77,6 @@ fun main(args: Array<String>) {
         System.out.println("Person: " + person.name)
     }
 
-    // start transaction because of the update
-    db.begin()
-
     transaction {
         val person = personDao.find("name = ? and age = ?", "John", 40)
 
