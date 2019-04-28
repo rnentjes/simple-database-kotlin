@@ -3,7 +3,9 @@ package nl.astraeus.database
 import nl.astraeus.database.annotations.Column
 import nl.astraeus.database.annotations.Id
 import nl.astraeus.database.annotations.Table
-import org.junit.Assert.*
+import nl.astraeus.database.jdbc.ConnectionPool
+import nl.astraeus.database.jdbc.ConnectionProvider
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.sql.Connection
@@ -46,15 +48,18 @@ class ManyToMany(var company: Company, @Column(name = "usr") var user: User) {
     protected constructor(): this(Company(""), User(Company(""), "", ""))
 }
 
-object CompanyDao: Dao<Company>(Company::class.java)
+object CompanyDao: SimpleDao<Company>(Company::class.java)
 
-object UserDao: Dao<User>(User::class.java)
+object UserDao: SimpleDao<User>(User::class.java)
 
-object MTMDao: Dao<ManyToMany>(ManyToMany::class.java) {
+object MTMDao: SimpleDao<ManyToMany>(ManyToMany::class.java) {
 
     fun users(comp: Company): List<User> {
         return transaction<List<User>> {
             UserDao.from("join manytomany where manytomany.user = usr.id and manytomany.company = ?", comp.id)
+            val dao = UserDao()
+
+            dao.from("join manytomany where manytomany.user = usr.id and manytomany.company = ?", comp.id)
         }
     }
 
@@ -75,21 +80,20 @@ fun createConnection(): Connection {
     return connection
 }
 
+class MyConnectionProvider : ConnectionProvider() {
+
+    override fun getConnection() = createConnection()
+
+    override fun getDefinition(): DdlMapping.DatabaseDefinition {
+        return DdlMapping.DatabaseDefinition.H2
+    }
+}
+
 class TestQueries {
     @Before fun setUp() {
-        DdlMapping.get().setExecuteDDLUpdates(true)
+        val db = SimpleDatabase.define(ConnectionPool(MyConnectionProvider()))
 
-        setConnectionProvider(::createConnection)
-
-        setConnectionProvider {
-            Class.forName("org.h2.Driver")
-
-            val connection = DriverManager.getConnection("jdbc:h2:mem:TestQueries", "sa", "")
-            connection.autoCommit = false
-
-            // result
-            connection
-        }
+        db.setExecuteDDLUpdates(true);
     }
 
     @Test fun testWhere() {
@@ -100,22 +104,22 @@ class TestQueries {
             val rien = User(company, "Rien", "info@somewhere.com")
             val piet = User(company, "Piet", "piet@somewhere.com")
 
-            UserDao.insert(rien)
+            UserDao.insert(info)
             UserDao.upsert(piet)
 
-            rien.name = "Rrrrien"
-            UserDao.update(rien)
+            info.name = "Iiiinfo"
+            UserDao.update(info)
 
             piet.email = "pietje@somewhere.com"
             UserDao.upsert(piet)
 
-            MTMDao.insert(ManyToMany(company, rien))
+            MTMDao.insert(ManyToMany(company, info))
             MTMDao.insert(ManyToMany(company, piet))
-            MTMDao.insert(ManyToMany(Company("Other company"), rien))
+            MTMDao.insert(ManyToMany(Company("Other company"), info))
         }
 
         transaction {
-            val user = UserDao.find("name = ?", "Rrrrien")
+            val user = UserDao.find("name = ?", "Iiiinfo")
 
             if (user != null) {
                 user.company.name = "Better Company!"
@@ -131,7 +135,7 @@ class TestQueries {
         }
 
         transaction {
-            var found = UserDao.where("name = ?", "Rrrrien")
+            val found = UserDao.where("name = ?", "Iiiinfo")
 
             assertTrue(found.size == 1)
 
@@ -151,7 +155,7 @@ class TestQueries {
                 println("Found: #${user.id} - ${user.name} - ${user.email} - ${user.company.name}")
             }
 
-            var rs = query("SELECT * FROM company")
+            var rs = query(query = "SELECT * FROM company")
 
             while(rs.next()) {
                 print("Company: ")
@@ -160,7 +164,7 @@ class TestQueries {
                 println(rs.getString(2))
             }
 
-            rs = query("SELECT * FROM usr")
+            rs = query(query = "SELECT * FROM usr")
 
             while(rs.next()) {
                 print("User: ")
@@ -173,7 +177,7 @@ class TestQueries {
                 println(rs.getString(4))
             }
 
-            rs = query("SELECT * FROM manytomany")
+            rs = query(query = "SELECT * FROM manytomany")
 
             while(rs.next()) {
                 print("MTM: ")
