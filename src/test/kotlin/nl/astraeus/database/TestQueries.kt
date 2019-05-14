@@ -8,6 +8,7 @@ import nl.astraeus.database.jdbc.ConnectionProvider
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.awt.SystemColor.info
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -42,7 +43,10 @@ class User(
 
 // needs manual index to prevent double entries
 @Table
-class ManyToMany(var company: Company, @Column(name = "usr") var user: User) {
+class ManyToMany(
+    var company: Company,
+    @Column(name = "usr") var user: User
+) {
     @Id var id: Long = 0
 
     protected constructor(): this(Company(""), User(Company(""), "", ""))
@@ -57,15 +61,12 @@ object MTMDao: SimpleDao<ManyToMany>(ManyToMany::class.java) {
     fun users(comp: Company): List<User> {
         return transaction<List<User>> {
             UserDao.from("join manytomany where manytomany.user = usr.id and manytomany.company = ?", comp.id)
-            val dao = UserDao()
-
-            dao.from("join manytomany where manytomany.user = usr.id and manytomany.company = ?", comp.id)
         }
     }
 
     fun companies(user: User): List<Company> {
         return transaction<List<Company>> {
-            CompanyDao.from("join manytomany where manytomany.company = company.id and manytomany.user = ?", user.id)
+            CompanyDao.from("join manytomany where manytomany.company = company.id and manytomany.usr = ?", user.id)
         }
     }
 }
@@ -104,18 +105,18 @@ class TestQueries {
             val rien = User(company, "Rien", "info@somewhere.com")
             val piet = User(company, "Piet", "piet@somewhere.com")
 
-            UserDao.insert(info)
+            UserDao.insert(rien)
             UserDao.upsert(piet)
 
-            info.name = "Iiiinfo"
-            UserDao.update(info)
+            rien.name = "Iiiinfo"
+            UserDao.update(rien)
 
             piet.email = "pietje@somewhere.com"
             UserDao.upsert(piet)
 
-            MTMDao.insert(ManyToMany(company, info))
+            MTMDao.insert(ManyToMany(company, rien))
             MTMDao.insert(ManyToMany(company, piet))
-            MTMDao.insert(ManyToMany(Company("Other company"), info))
+            MTMDao.insert(ManyToMany(Company("Other company"), rien))
         }
 
         transaction {
