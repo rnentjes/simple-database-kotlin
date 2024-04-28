@@ -5,12 +5,11 @@ import nl.astraeus.database.annotations.Id
 import nl.astraeus.database.annotations.Table
 import nl.astraeus.database.jdbc.ConnectionPool
 import nl.astraeus.database.jdbc.ConnectionProvider
-import org.junit.Assert.assertTrue
-import org.junit.Before
-import org.junit.Test
-import java.awt.SystemColor.info
+import org.junit.jupiter.api.Assertions.assertTrue
 import java.sql.Connection
 import java.sql.DriverManager
+import kotlin.test.BeforeTest
+import kotlin.test.Test
 
 /**
  * User: rnentjes
@@ -91,7 +90,7 @@ class MyConnectionProvider : ConnectionProvider() {
 }
 
 class TestQueries {
-    @Before fun setUp() {
+    @BeforeTest fun setUp() {
         val db = SimpleDatabase.define(ConnectionPool(MyConnectionProvider()))
 
         db.setExecuteDDLUpdates(true);
